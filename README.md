@@ -1,5 +1,7 @@
 # codex-asar-tools
 
+[English](README.en.md)
+
 给 macOS 版 Codex.app 启用被地域限制隐藏的 Computer Use 功能。
 
 这个工具会直接修改 `/Applications/Codex.app/Contents/Resources/app.asar`，把应用里用于判断 Computer Use 可用性的目标调用替换成恒真表达式，然后更新 ASAR 完整性哈希并重新签名应用。
