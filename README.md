@@ -1,44 +1,44 @@
 # codex-asar-tools
 
-[English](README.en.md)
+English | [简体中文](README_CN.md)
 
-给 macOS 版 Codex.app 启用被地域限制隐藏的 Computer Use 功能。
+Enable the Computer Use feature in the macOS Codex.app when it is hidden because of regional availability.
 
-这个工具会直接修改 `/Applications/Codex.app/Contents/Resources/app.asar`，把应用里用于判断 Computer Use 可用性的目标调用替换成恒真表达式，然后更新 ASAR 完整性哈希并重新签名应用。
+This tool directly patches `/Applications/Codex.app/Contents/Resources/app.asar`, replaces the target availability check with an always-true expression, updates the ASAR integrity hash, and re-signs the app.
 
-## 使用
+## Usage
 
-先退出 Codex.app，然后执行：
+Quit Codex.app first, then run:
 
 ```sh
 node patch.mjs --dry-run
 ```
 
-确认只找到一个目标后再真正写入：
+If the dry run finds exactly one target, apply the patch:
 
 ```sh
 node patch.mjs
 ```
 
-如果提示没有权限：
+If macOS reports a permission error:
 
 ```sh
 sudo node patch.mjs
 ```
 
-完成后重新打开 Codex.app。
+Restart Codex.app when the script finishes.
 
-## 备份和恢复
+## Backup and Restore
 
-真正写入前脚本会备份：
+Before writing changes, the script creates backups:
 
 - `app.asar.bak.<timestamp>`
 - `Info.plist.bak.<timestamp>`
 
-需要恢复时，把对应备份复制回原路径即可。Codex.app 更新后补丁通常会失效，需要重新运行脚本。
+To restore, copy the matching backup files back to their original paths. Codex.app updates usually replace the patch, so you may need to rerun the script after updating the app.
 
-## 说明
+## Notes
 
-- 只支持默认安装路径：`/Applications/Codex.app`
-- 只在目标标记唯一时写入，避免误改其他代码
-- `--dry-run` 不会写文件、更新 `Info.plist` 或重新签名
+- Only supports the default install path: `/Applications/Codex.app`
+- Only writes when the target marker is unique, to avoid patching unrelated code
+- `--dry-run` does not write files, update `Info.plist`, or re-sign the app
